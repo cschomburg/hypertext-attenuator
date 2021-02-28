@@ -8,6 +8,11 @@ function mapPost(item: JsonObject): Post {
   const post = { ...item };
   post.createdAt = parseISO(item.createdAt as string);
 
+  if (post.children) {
+    const children = post.children as JsonObject[];
+    post.children = children.map(mapPost);
+  }
+
   return post as unknown as Post;
 }
 
@@ -39,6 +44,11 @@ export class Api {
   async getFeeds(): Promise<FeedState[]> {
     const res = await this.#http('feeds').json() as JsonObject[];
     return res.map(mapFeedState);
+  }
+
+  async getPost(feedId: string, postId: string): Promise<Post> {
+    const res = await this.#http(`feed/${feedId}/${postId}`).json() as JsonObject;
+    return mapPost(res.post as JsonObject);
   }
 
   async refreshFeed(feed: Feed): Promise<FeedState> {

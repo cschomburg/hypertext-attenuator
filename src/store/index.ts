@@ -14,6 +14,10 @@ export const store = createStore<State>({
     feeds: [],
   },
 
+  getters: {
+    getFeedStateById: (state) => (id: string) => state.feeds.find((f) => f.feed.id === id),
+  },
+
   mutations: {
     setFeeds(state, feeds: FeedState[]) {
       state.feeds = feeds;

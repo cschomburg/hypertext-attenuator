@@ -3,7 +3,7 @@
     <div class="flex-initial px-2 text-gray-600">{{ i + 1}}.</div>
 
     <div class="flex-1">
-      <a :href="visitUrl" class="cursor-pointer font-medium">{{ post.title }}</a>
+      <a target="_blank" :href="visitUrl" class="cursor-pointer font-medium">{{ post.title }}</a>
 
       <span v-if="domain" class="text-sm text-gray-600">
         ({{ domain }})
@@ -12,7 +12,7 @@
       <div class="text-sm text-gray-600">
         {{ post.points }} points |
         {{ createdAgo }} |
-        {{ post.numComments }} comments
+        <router-link :to="commentsLink">{{ post.numComments }} comments</router-link>
       </div>
     </div>
   </div>
@@ -64,7 +64,14 @@ export default defineComponent({
       return api.getVisitUrl(feed, post);
     });
 
-    return { domain, createdAgo, visitUrl };
+    const commentsLink = computed(() => {
+      const { feed, post } = props;
+      return `/feed/${feed.id}/${post.id}`;
+    });
+
+    return {
+      commentsLink, domain, createdAgo, visitUrl,
+    };
   },
 });
 </script>

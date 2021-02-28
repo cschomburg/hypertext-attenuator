@@ -13,3 +13,11 @@ body {
 .badge {
     @apply text-sm p-1 bg-mango-700 text-mango-100 rounded-lg;
 }
+
+.comment-text p {
+    @apply p-1;
+}
+
+.comment-text a {
+    @apply underline;
+}
