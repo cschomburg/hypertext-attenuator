@@ -1,12 +1,38 @@
-import { createStore } from 'vuex';
+import { InjectionKey } from 'vue';
+import { createStore, useStore as baseUseStore, Store } from 'vuex';
+import type { FeedState, Feed } from '../model';
+import api from '../api';
 
-export default createStore({
+export interface State {
+  feeds: FeedState[];
+}
+
+export const key: InjectionKey<Store<State>> = Symbol('store');
+
+export const store = createStore<State>({
   state: {
+    feeds: [],
   },
+
   mutations: {
+    setFeeds(state, feeds: FeedState[]) {
+      state.feeds = feeds;
+    },
   },
+
   actions: {
-  },
-  modules: {
+    async fetchFeeds({ commit }) {
+      const feeds = await api.getFeeds();
+      commit('setFeeds', feeds);
+    },
+
+    async refreshFeed({ commit }, feed: Feed) {
+      await api.refreshFeed(feed);
+      return this.dispatch('fetchFeeds');
+    },
   },
 });
+
+export function useStore() {
+  return baseUseStore(key);
+}

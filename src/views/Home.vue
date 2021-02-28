@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="container mx-auto">
+    <Feed v-for="state in feeds" :key="state.feed.id" :state="state"></Feed>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent, computed, onMounted } from 'vue';
+import { useStore } from '@/store';
+import Feed from '@/components/Feed.vue';
 
 export default defineComponent({
   name: 'Home',
+
   components: {
-    HelloWorld,
+    Feed,
+  },
+
+  setup() {
+    const store = useStore();
+
+    onMounted(() => {
+      store.dispatch('fetchFeeds');
+    });
+
+    return {
+      feeds: computed(() => store.state.feeds),
+    };
   },
 });
 </script>
