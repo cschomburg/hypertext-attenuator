@@ -26,11 +26,13 @@ function mapFeedState(item: JsonObject): FeedState {
 }
 
 export class Api {
+  #baseUrl = 'http://localhost:8000/v1';
+
   #http: typeof ky;
 
   constructor() {
     this.#http = ky.create({
-      prefixUrl: 'http://localhost:8000/v1',
+      prefixUrl: this.#baseUrl,
     });
   }
 
@@ -42,6 +44,10 @@ export class Api {
   async refreshFeed(feed: Feed): Promise<FeedState> {
     const res = await this.#http.post(`feed/${feed.id}`).json() as JsonObject;
     return mapFeedState(res);
+  }
+
+  getVisitUrl(feed: Feed, post: Post): string {
+    return `${this.#baseUrl}/visit/${feed.id}/${post.id}`;
   }
 }
 

@@ -9,6 +9,7 @@
       <FeedItem
         v-for="(post, i) in recentPosts"
         :key="post.id"
+        :feed="state.feed"
         :post="post"
         :i="i">
       </FeedItem>
