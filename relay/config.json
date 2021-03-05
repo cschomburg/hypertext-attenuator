@@ -1,0 +1,26 @@
+{
+  "feeds": [
+    {
+      "id": "hackernews",
+      "url": "",
+      "scraper": "hackernews",
+      "delay": 10,
+      "failureRate": 0.2
+    },
+    {
+      "id": "lobsters",
+      "url": "",
+      "scraper": "lobsters"
+    },
+    {
+      "id": "programming",
+      "url": "https://www.reddit.com/r/programming.json?raw_json=1",
+      "scraper": "reddit"
+    },
+    {
+      "id": "coingecko",
+      "url": "",
+      "scraper": "coingecko"
+    }
+  ]
+}
