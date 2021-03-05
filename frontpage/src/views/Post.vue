@@ -24,6 +24,7 @@ import { useStore } from '@/store';
 import api from '@/api';
 import Comment from '@/components/Comment.vue';
 import FeedItem from '@/components/FeedItem.vue';
+import { Post } from '@/model';
 
 export default defineComponent({
   name: 'Post',
@@ -42,8 +43,8 @@ export default defineComponent({
     const post = ref<Post|undefined>();
 
     onMounted(async () => {
-      const feedId = route.params.feed;
-      const postId = route.params.post;
+      const feedId = route.params.feed as string;
+      const postId = route.params.post as string;
       post.value = await api.getPost(feedId, postId);
     });
 
