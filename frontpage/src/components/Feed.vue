@@ -1,77 +1,45 @@
 <template>
   <div class="feed flex flex-col">
-    <div class="p-5">
-      <a class="link" @click="refreshFeed()">{{ state.feed.id }}</a>
-      <span class="badge">{{ state.status }}</span>
-    </div>
-
-    <div v-if="state.status === 'available'">
-      <FeedItem
-        v-for="(post, i) in recentPosts"
-        :key="post.id"
-        :feed="state.feed"
-        :post="post"
-        :i="i">
-      </FeedItem>
-    </div>
-
-    <div v-if="state.status === 'pending'">
-      ETA: {{ resultEta }}
+    <div class="p-5" :class="isSelected ? 'border-b-4 border-mango-700' : null">
+      <a class="link" @click="selectFeed()">{{ state.feed.id }}</a>
+      <a class="badge cursor-pointer" @click="refreshFeed()">{{ state.status }}</a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { useStore } from '@/store';
 import { FeedState } from '@/model';
-import { formatAgo, sortByCreated } from '@/utils';
-import FeedItem from './FeedItem.vue';
 
 export default defineComponent({
   name: 'Feed',
-
-  components: { FeedItem },
 
   props: {
     state: {
       type: Object as PropType<FeedState>,
       required: true,
     },
+    isSelected: {
+      type: Boolean,
+      required: true,
+    },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
 
     const refreshFeed = async () => {
       store.dispatch('refreshFeed', props.state.feed);
     };
 
-    const recentPosts = computed(() => {
-      const scrape = props.state.lastScrape;
-      if (!scrape) {
-        return [];
-      }
-
-      const posts = [...scrape.posts];
-      sortByCreated(posts);
-
-      return posts;
-    });
-
-    const resultEta = computed(() => {
-      const eta = props.state.resultEta;
-      if (!eta) {
-        return '';
-      }
-
-      return formatAgo(eta);
-    });
+    const selectFeed = () => {
+      emit('select-feed', props.state.feed.id);
+    };
 
     return {
-      recentPosts,
       refreshFeed,
-      resultEta,
+      selectFeed,
     };
   },
 });

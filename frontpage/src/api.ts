@@ -21,6 +21,7 @@ function mapFeedState(item: JsonObject): FeedState {
   if (feed.lastScrape) {
     const scrape = feed.lastScrape as JsonObject;
     scrape.posts = (scrape.posts as JsonObject[]).map(mapPost);
+    scrape.scrapedAt = parseISO(scrape.scrapedAt as string);
     feed.lastScrape = scrape;
   }
   if (feed.resultEta) {
