@@ -21,7 +21,6 @@ import {
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from '@/store';
-import api from '@/api';
 import Comment from '@/components/Comment.vue';
 import FeedItem from '@/components/FeedItem.vue';
 import { Post } from '@/model';
@@ -45,7 +44,7 @@ export default defineComponent({
     onMounted(async () => {
       const feedId = route.params.feed as string;
       const postId = route.params.post as string;
-      post.value = await api.getPost(feedId, postId);
+      post.value = await store.getters.api.getPost(feedId, postId);
     });
 
     return { feed, post };

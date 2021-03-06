@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts">
-import api from '@/api';
 import { computed, defineComponent, PropType } from 'vue';
 import { Feed, Post } from '@/model';
+import { useStore } from '@/store';
 import { formatAgo } from '@/utils';
 
 export default defineComponent({
@@ -43,6 +43,8 @@ export default defineComponent({
   },
 
   setup(props) {
+    const store = useStore();
+
     const domain = computed(() => {
       const { post } = props;
       if (!post.url) {
@@ -61,7 +63,7 @@ export default defineComponent({
 
     const visitUrl = computed(() => {
       const { feed, post } = props;
-      return api.getVisitUrl(feed, post);
+      return store.getters.api.getVisitUrl(feed, post);
     });
 
     const commentsLink = computed(() => {

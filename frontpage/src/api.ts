@@ -1,6 +1,11 @@
 import ky from 'ky';
 import { parseISO } from 'date-fns';
-import { Feed, FeedState, Post } from './model';
+import {
+  Config,
+  Feed,
+  FeedState,
+  Post,
+} from './model';
 
 type JsonObject = Record<string, unknown>;
 
@@ -31,12 +36,13 @@ function mapFeedState(item: JsonObject): FeedState {
   return feed as unknown as FeedState;
 }
 
-export class Api {
-  #baseUrl = 'http://localhost:8000/v1';
+export default class ApiClient {
+  #baseUrl: string;
 
   #http: typeof ky;
 
-  constructor() {
+  constructor(config: Config) {
+    this.#baseUrl = `${config.relayUrl}/v1`;
     this.#http = ky.create({
       prefixUrl: this.#baseUrl,
     });
@@ -61,5 +67,3 @@ export class Api {
     return `${this.#baseUrl}/visit/${feed.id}/${post.id}`;
   }
 }
-
-export default new Api();

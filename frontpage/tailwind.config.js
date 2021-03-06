@@ -5,7 +5,9 @@ module.exports = {
   ],
   darkMode: false,
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['active'],
+    },
   },
   plugins: [],
   theme: {

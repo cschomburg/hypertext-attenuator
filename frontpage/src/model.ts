@@ -1,3 +1,11 @@
+export class Config {
+  relayUrl = 'http://localhost:8000';
+
+  constructor(config: Partial<Config> = {}) {
+    Object.assign(this, config);
+  }
+}
+
 export enum FeedStatus {
   New = 'new',
   Pending = 'pending',
