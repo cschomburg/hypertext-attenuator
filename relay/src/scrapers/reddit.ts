@@ -1,20 +1,38 @@
 import { Feed, Scrape, Post } from '../model.ts';
 
-interface Listing {
+interface Item {
+  kind: string;
+  data: unknown;
+}
+
+interface Listing extends Item {
   kind: "Listing";
   data: ListingData;
 }
 
 interface ListingData {
-  children: Link[];
+  children: Item[];
 }
 
-interface Link {
+interface Link extends Item {
   kind: "t3";
-  data: LinkData;
+  data: PostData;
 }
 
-interface LinkData {
+function isLink(item: Item): item is Link {
+  return item.kind === 't3'
+}
+
+interface Comment extends Item {
+  kind: "t1";
+  data: PostData;
+}
+
+function isComment(item: Item): item is Comment {
+  return item.kind === 't1'
+}
+
+interface PostData {
   id: string;
   selftext: string;
   title: string;
@@ -22,24 +40,40 @@ interface LinkData {
   link_flair_text: string;
   created_utc: number;
   selftext_html: string;
+  body_html: string;
   num_comments: number;
   url: string;
+  replies?: Listing;
 }
 
-function linkToPost(link: Link): Post {
+function linkToPost(link: Link|Comment): Post {
   const post: Post = {
     id: link.data.id,
     title: link.data.title,
     createdAt: (new Date(link.data.created_utc * 1000)).toISOString(),
     url: link.data.url,
-    text: link.data.selftext_html,
+    text: link.data.selftext_html || link.data.body_html,
     points: link.data.score,
     numComments: link.data.num_comments,
 
     // raw: link,
   };
 
+  if (link.data.replies) {
+    post.children = link.data.replies.data.children.filter(isComment).map(linkToPost);
+  }
+
   return post;
+}
+
+function linkUrl(feed: Feed, id: string): string {
+  const matches = feed.url.match(/\/r\/(\w+)/)
+  if (!matches) {
+    throw new Error('Could not parse subreddit from url: ' + feed.url);
+  }
+  const subreddit = matches[1];
+
+  return `https://www.reddit.com/r/${subreddit}/${id}.json?raw_json=1`
 }
 
 export default {
@@ -51,7 +85,7 @@ export default {
     const res = await fetch(feed.url);
     const result = await res.json() as Listing;
 
-    const posts = result.data.children.map(linkToPost);
+    const posts = result.data.children.filter(isLink).map(linkToPost);
 
     const scrape: Scrape = {
       feed,
@@ -62,7 +96,13 @@ export default {
     return scrape;
   },
 
-  async scrapePost(id: string): Promise<Post> {
-    throw new Error('Not implemented yet.');
+  async scrapePost(feed: Feed, id: string): Promise<Post> {
+    const res = await fetch(linkUrl(feed, id));
+    const result = await res.json() as Listing[];
+
+    const post = linkToPost(result[0].data.children[0] as Link);
+    post.children = result[1].data.children.filter(isComment).map(linkToPost);
+
+    return post;
   },
 }

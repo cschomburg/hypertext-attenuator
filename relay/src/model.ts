@@ -17,7 +17,7 @@ export interface Scrape {
 export interface Scraper {
   getId(): string;
   scrapeFeed(feed: Feed): Promise<Scrape>;
-  scrapePost(id: string): Promise<Post>;
+  scrapePost(feed: Feed, id: string): Promise<Post>;
 }
 
 export interface Post {

@@ -76,7 +76,7 @@ export default {
     return scrape;
   },
 
-  async scrapePost(id: string): Promise<Post> {
+  async scrapePost(feed: Feed, id: string): Promise<Post> {
     const res = await fetch('https://hn.algolia.com/api/v1/items/' + id);
     const result = await res.json() as AlgoliaItem;
 

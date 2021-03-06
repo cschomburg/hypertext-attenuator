@@ -49,7 +49,7 @@ export default {
     return scrape;
   },
 
-  async scrapePost(id: string): Promise<Post> {
+  async scrapePost(feed: Feed, id: string): Promise<Post> {
     throw new Error('Not implemented yet.');
   },
 }

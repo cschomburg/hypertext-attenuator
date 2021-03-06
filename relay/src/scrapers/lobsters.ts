@@ -10,6 +10,35 @@ interface LobsterPost {
   comment_count: number;
   description: string;
   tags: string[];
+  comments?: LobsterComment[];
+}
+
+interface LobsterComment {
+  short_id: string;
+  created_at: string;
+  short_id_url: string;
+  score: number;
+  indent_level: number;
+  comment: string;
+  comments?: LobsterComment[];
+}
+
+function listToTree(items: LobsterComment[]): LobsterComment[] {
+  const roots: LobsterComment[] = [];
+  let stack: LobsterComment[] = [];
+
+  items.forEach((item) => {
+    const level = item.indent_level;
+    if (level === 1) {
+      roots.push(item);
+    } else {
+      const parent = stack[level - 2];
+      parent.comments = [...(parent.comments || []), item];
+    }
+    stack[level - 1] = item;
+  });
+
+  return roots;
 }
 
 function lobsterToPost(item: LobsterPost): Post {
@@ -24,6 +53,29 @@ function lobsterToPost(item: LobsterPost): Post {
 
     // raw: item,
   };
+
+  if (item.comments) {
+    post.children = listToTree(item.comments).map(commentToPost);
+  }
+
+  return post;
+}
+
+function commentToPost(item: LobsterComment): Post {
+  const post: Post = {
+    id: item.short_id,
+    title: '',
+    createdAt: item.created_at,
+    url: item.short_id_url,
+    text: item.comment,
+    points: item.score,
+
+    // raw: item,
+  };
+
+  if (item.comments) {
+    post.children = item.comments.map(commentToPost);
+  }
 
   return post;
 }
@@ -48,7 +100,10 @@ export default {
     return scrape;
   },
 
-  async scrapePost(id: string): Promise<Post> {
-    throw new Error('Not implemented yet.');
+  async scrapePost(feed: Feed, id: string): Promise<Post> {
+    const res = await fetch(`https://lobste.rs/s/${id}.json`);
+    const result = await res.json() as LobsterPost;
+
+    return lobsterToPost(result);
   },
 }

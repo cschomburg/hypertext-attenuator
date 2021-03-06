@@ -132,7 +132,7 @@ export class Store {
 
   async scrapePost(feed: Feed, id: string): Promise<Post> {
     const scraper = scrapers.get(feed.scraper);
-    const post = await scraper.scrapePost(id);
+    const post = await scraper.scrapePost(feed, id);
 
     return post;
   }
