@@ -21,6 +21,11 @@
       "id": "coingecko",
       "url": "",
       "scraper": "coingecko"
+    },
+    {
+      "id": "kickscondor",
+      "url": "https://www.kickscondor.com/rss.xml",
+      "scraper": "rss"
     }
   ]
 }

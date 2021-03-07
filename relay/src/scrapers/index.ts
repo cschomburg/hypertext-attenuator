@@ -4,6 +4,7 @@ import coingecko from './coingecko.ts';
 import hackernews from './hackernews.ts';
 import lobsters from './lobsters.ts';
 import reddit from './reddit.ts';
+import rss from './rss.ts';
 
 export class ScraperCollection {
   #scrapers: Record<string, Scraper> = {};
@@ -27,5 +28,6 @@ collection.add(coingecko);
 collection.add(hackernews);
 collection.add(lobsters);
 collection.add(reddit);
+collection.add(rss);
 
 export default collection;

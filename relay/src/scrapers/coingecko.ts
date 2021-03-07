@@ -1,5 +1,5 @@
 import { Feed, Scrape, Post } from '../model.ts';
-import numeral from 'https://deno.land/x/numeral@v0.1.0/src/mod.ts';
+import { numeral } from '../deps.ts';
 
 type Market = {
   id: string;
