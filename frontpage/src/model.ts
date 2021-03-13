@@ -1,5 +1,5 @@
 export class Config {
-  relayUrl = 'http://localhost:8000';
+  relayUrl = window.location.origin;
 
   constructor(config: Partial<Config> = {}) {
     Object.assign(this, config);
