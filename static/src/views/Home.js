@@ -20,6 +20,7 @@ export default function Home() {
     }, []);
 
     const selectFeed = (feed) => {
+        fetchFeeds();
         setSelectedFeedId(feed.id);
     }
 

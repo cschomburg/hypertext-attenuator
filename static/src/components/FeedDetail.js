@@ -16,14 +16,14 @@ export default function FeedDetail({ state }) {
                 <div class="text-sm muted mb-5">
                     Last scraped: ${lastScraped}
                 </div>
+
+                ${recentPosts.map((post, i) => html`
+                    <${FeedItem} feed=${state.feed} post=${post} i=${i} />
+                `)}
             `}
 
-            ${recentPosts.map((post, i) => html`
-                <${FeedItem} feed=${state.feed} post=${post} i=${i} />
-            `)}
-
             ${state.status === 'pending' && html`
-                ETA: pending
+                ETA: ${ formatAgo(state.resultEta) }
             `}
         </div>
     `;
