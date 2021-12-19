@@ -4,10 +4,11 @@ import Post from './views/Post.js';
 import Settings from './views/Settings.js';
 
 function App() {
+
     return html`
         <nav class="container">
-            <${Link} class=link activeClassName=active href="/">Home<//>${" "}
-            <${Link} class=link activeClassName=active href="/settings">Settings<//>${" "}
+            <${Link} activeClassName=active href="/">Home<//>${" | "}
+            <${Link} activeClassName=active href="/settings">Settings<//>
         </nav>
 
         <${Router}>

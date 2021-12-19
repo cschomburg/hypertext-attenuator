@@ -6,10 +6,10 @@
 
     --nord4: #d8dee9;
     --nord5: #e5e9f0;
-    --nord6: #eceff4; /* base */
+    --nord6: #eceff4;
 
     --nord7: #8fbcbb;
-    --nord8: #88c0d0; /* accent */
+    --nord8: #88c0d0;
     --nord9: #81a1c1;
     --nord10: #5e81ac;
 
@@ -24,16 +24,20 @@
     --color-primary: var(--nord8);
     --color-secondary: var(--nord9);
     --color-muted: var(--nord3);
+
+    --font-sans: system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue;
 }
 
 a {
+    color: var(--color-fg);
     text-decoration: none;
 }
 
 body {
     background: var(--color-bg);
     color: var(--color-fg);
-    font-family: sans-serif;
+    font-family: var(--font-sans);
+    line-height: var(--line-md);
 }
 
 .container {
@@ -42,31 +46,31 @@ body {
 }
 
 .my-5 {
-    margin: 5px 0;
+    margin: var(--size-5) 0;
 }
 
 .mt-5 {
-    margin-top: 5px;
+    margin-top: var(--size-5);
 }
 
 .mb-5 {
-    margin-bottom: 5px;
+    margin-bottom: var(--size-5);
 }
 
 .px-2 {
-    padding: 0 2px;
+    padding: 0 var(--size-2);
 }
 
 .p-2 {
-    padding: 2px;
+    padding: var(--size-2);
 }
 
 .p-5 {
-    padding: 5px;
+    padding: var(--size-5);
 }
 
 .pl-10 {
-    padding-left: 10px;
+    padding-left: var(--size-10);
 }
 
 h1 {
@@ -78,6 +82,7 @@ h1 {
     padding: 0.5rem 1rem;
     color: var(--color-primary);
     cursor: pointer;
+    font-weight: var(--weight-semibold);
 }
 
 .badge {
@@ -106,19 +111,28 @@ h1 {
 
 .text-sm {
     font-size: var(--scale-00);
+    line-height: var(--line-xs);
 }
 
 .feed-link {
     color: var(--color-fg);
 }
 
+.feed-link.active {
+    border-bottom: var(--size-1) solid var(--color-primary);
+}
+
 .comment-body {
     border-left: 1px solid var(--color-muted);
-    margin-top: 2px;
-    padding: 0 5px;
+    margin-top: var(--size-2);
+    padding: 0 var(--size-5);
 }
 
 .comment-text a {
     color: var(--color-fg);
     text-decoration: underline;
+}
+
+.divide {
+    border-bottom: var(--size-1) solid var(--color-primary);
 }

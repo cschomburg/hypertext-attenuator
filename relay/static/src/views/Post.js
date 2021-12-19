@@ -29,7 +29,7 @@ export default function Post({ feedId, postId }) {
         <div class="container mt-5">
             <${FeedItem} feed=${feed} post=${post} i=0 />
 
-            <div class="border"></div>
+            <div class="divide"></div>
 
             <div class="comments">
                 ${post.children.map((comment) => html`

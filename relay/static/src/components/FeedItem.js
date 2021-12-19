@@ -27,7 +27,7 @@ export default function FeedItem({ feed, post, i }) {
                 <a class="feed-link" target="_blank" href="${visitUrl}">${ post.title }</a>${' '}
 
                 ${domain && html`
-                    <span class="text-sm muted">${ domain }</span>
+                    <span class="text-sm muted">(${ domain })</span>
                 `}
 
                 <div class="text-sm muted">
