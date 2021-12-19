@@ -21,7 +21,7 @@ export default function Comment({ comment }) {
                 <div class="comment-body">
                     <div class="comment-text" dangerouslySetInnerHTML=${{ __html: comment.text }}></div>
 
-                    <div class="pl-10">
+                    <div class="comment-children">
                         ${comment.children && comment.children.map((comment) => html`
                             <${Comment} key=${comment.id} comment=${comment} />
                         `)}

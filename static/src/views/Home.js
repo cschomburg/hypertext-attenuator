@@ -28,15 +28,17 @@ export default function Home() {
 
     return html`
         <div class="container mt-5">
-            <div class="flex">
-                ${feeds.map((state) => html`
-                    <${FeedLink}
-                        state=${state}
-                        active=${state.feed.id === selectedFeedId}
-                        onSelect=${() => selectFeed(state.feed)}
-                        onRefresh=${() => refreshFeed(state.feed)}
-                    />
-                `)}
+            <div class="scrollable-x">
+                <div class="flex">
+                    ${feeds.map((state) => html`
+                        <${FeedLink}
+                            state=${state}
+                            active=${state.feed.id === selectedFeedId}
+                            onSelect=${() => selectFeed(state.feed)}
+                            onRefresh=${() => refreshFeed(state.feed)}
+                        />
+                    `)}
+                </div>
             </div>
 
             ${selectedFeed && html`

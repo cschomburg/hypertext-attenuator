@@ -69,10 +69,6 @@ body {
     padding: var(--size-5);
 }
 
-.pl-10 {
-    padding-left: var(--size-10);
-}
-
 h1 {
     font-weight: var(--weight-bold);
     font-size: var(--scale-2);
@@ -128,6 +124,10 @@ h1 {
     padding: 0 var(--size-5);
 }
 
+.comment-children {
+    padding-left: var(--size-10);
+}
+
 .comment-text a {
     color: var(--color-fg);
     text-decoration: underline;
@@ -135,4 +135,18 @@ h1 {
 
 .divide {
     border-bottom: var(--size-1) solid var(--color-primary);
+}
+
+.scrollable-x {
+    overflow: auto;
+}
+
+@media (max-width: 400px) {
+    .comment-body {
+        padding: 0 var(--size-2);
+    }
+
+    .comment-children {
+        padding-left: var(--size-2);
+    }
 }
