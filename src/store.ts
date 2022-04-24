@@ -1,6 +1,6 @@
-import { Config } from './config.ts';
-import { Feed, Post, Scrape } from './model.ts';
-import scrapers from './scrapers/index.ts';
+import { Config } from "./config.ts";
+import { Feed, Post, Scrape } from "./model.ts";
+import scrapers from "./scrapers/index.ts";
 
 export enum FeedStatus {
   New = "new",
@@ -12,9 +12,9 @@ export enum FeedStatus {
 export class FeedState {
   feed: Feed;
   status: FeedStatus;
-  resultEta: string|null = null;
+  resultEta: string | null = null;
 
-  lastScrape: Scrape|null = null;
+  lastScrape: Scrape | null = null;
   posts: Record<string, Post> = {};
 
   constructor(feed: Feed) {
@@ -33,7 +33,7 @@ export class Store {
 
   getConfig(): Config {
     if (this.config === undefined) {
-      throw new Error('Store not initialized');
+      throw new Error("Store not initialized");
     }
 
     return this.config;
@@ -41,16 +41,16 @@ export class Store {
 
   getFeeds(): FeedState[] {
     const feeds = this.getConfig().feeds;
-    const state = feeds.map(feed => this.getFeedState(feed));
+    const state = feeds.map((feed) => this.getFeedState(feed));
 
     return state;
   }
 
   getFeed(id: string): Feed {
     const feeds = this.getConfig().feeds;
-    const feed = feeds.find(f => f.id === id);
+    const feed = feeds.find((f) => f.id === id);
     if (!feed) {
-      throw new Error(`Feed with ID ${id} not found`)
+      throw new Error(`Feed with ID ${id} not found`);
     }
 
     return feed;
@@ -59,7 +59,7 @@ export class Store {
   getFeedState(feed: Feed): FeedState {
     let state = this.feedStates[feed.id];
     if (state == null) {
-      state = new FeedState(feed)
+      state = new FeedState(feed);
       this.feedStates[feed.id] = state;
     }
 
@@ -79,10 +79,10 @@ export class Store {
   getPost(feed: Feed, id: string): Post {
     const scrape = this.getFeedState(feed).lastScrape;
     if (!scrape) {
-      throw new Error('feed not scraped');
+      throw new Error("feed not scraped");
     }
 
-    const post = scrape.posts.find(p => p.id === id);
+    const post = scrape.posts.find((p) => p.id === id);
     if (!post) {
       throw new Error(`post '${id}' not found`);
     }
@@ -99,31 +99,36 @@ export class Store {
       return state;
     }
 
-    const delay = feed.delay + Math.random() * (feed.delayJitter || 0)
-    const eta = new Date()
+    const delay = feed.delay + Math.random() * (feed.delayJitter || 0);
+    const eta = new Date();
     eta.setSeconds(eta.getSeconds() + delay);
     state.resultEta = eta.toISOString();
 
-    console.log('delaying feed', feed.id, 'until at least', eta);
+    console.log("delaying feed", feed.id, "until at least", eta);
 
     window.setTimeout(() => {
       if (feed.failureRate && Math.random() <= feed.failureRate) {
-        console.log(`the universe determined that scrape ${feed.id} failed`)
+        console.log(`the universe determined that scrape ${feed.id} failed`);
         state.status = FeedStatus.Failed;
         return;
       }
 
-      this.scrapeFeed(feed);
+      try {
+        this.scrapeFeed(feed);
+      } catch (e) {
+        console.error("scraping feed ${feed.id} failed:", e);
+      }
     }, delay * 1000);
 
     return state;
   }
 
   async scrapeFeed(feed: Feed): Promise<Scrape> {
-    console.log('scraping feed', feed.id);
+    console.log("scraping feed", feed.id);
     const scraper = scrapers.get(feed.scraper);
     const scrape = await scraper.scrapeFeed(feed);
-    console.log(`feed ${feed.id} scraped, ${scrape.posts.length} posts`)
+
+    console.log(`feed ${feed.id} scraped, ${scrape.posts.length} posts`);
 
     this.putScrape(scrape);
 

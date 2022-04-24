@@ -1,4 +1,4 @@
-FROM denoland/deno:1.17.0
+FROM denoland/deno:1.20
 EXPOSE 8000
 
 WORKDIR /app
