@@ -56,6 +56,20 @@ export class Store {
     return feed;
   }
 
+  putFeed(feed: Feed): Feed {
+    let feeds = this.getConfig().feeds;
+    feeds = feeds.filter((f) => f.id !== feed.id);
+    this.getConfig().feeds = feeds;
+
+    if (feeds.find((f) => f.id === feed.id)) {
+      throw new Error(`Feed with ID ${feed.id} already exists`);
+    }
+
+    feeds.push(feed);
+
+    return feed;
+  }
+
   getFeedState(feed: Feed): FeedState {
     let state = this.feedStates[feed.id];
     if (state == null) {

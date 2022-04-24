@@ -1,4 +1,5 @@
 import { Router, RouterContext } from "./deps.ts";
+import { isFeed } from "./model.ts";
 import store from "./store.ts";
 
 const router = new Router();
@@ -6,6 +7,17 @@ router
   .get("/v1/feeds", async (context: RouterContext) => {
     const feeds = store.getFeeds();
     context.response.body = feeds;
+  })
+  .post("/v1/feed", async (context: RouterContext) => {
+    let body = await context.request.body({ type: "json" }).value;
+    let feed = body?.feed || null;
+    if (!isFeed(feed)) {
+      throw new Error("no feed received");
+    }
+
+    feed = store.putFeed(feed);
+    const state = await store.queueScrape(feed);
+    context.response.body = { state };
   })
   .get("/v1/feed/:feedId", async (context: RouterContext) => {
     const feed = store.getFeed(context.params.feedId || "");
@@ -26,16 +38,6 @@ router
     const feed = store.getFeed(context.params.feedId || "");
     const state = await store.queueScrape(feed);
     context.response.body = state;
-  })
-  .get("/v1/scrape/:feedId", async (context: RouterContext) => {
-    const feed = store.getFeed(context.params.feedId || "");
-    const scrape = await store.scrapeFeed(feed);
-    context.response.body = scrape;
-  })
-  .get("/v1/scrape/:feedId/:id", async (context: RouterContext) => {
-    const feed = store.getFeed(context.params.feedId || "");
-    const post = await store.scrapePost(feed, context.params.id || "");
-    context.response.body = post;
   });
 
 export default router;

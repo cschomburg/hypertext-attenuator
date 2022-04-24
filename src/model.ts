@@ -34,3 +34,13 @@ export interface Post {
 
   raw?: any;
 }
+
+export function isFeed(feed: unknown): feed is Feed {
+  if (feed === null || typeof feed !== "object") {
+    return false;
+  }
+
+  return "id" in feed &&
+    "scraper" in feed &&
+    "url" in feed;
+}
