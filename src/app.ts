@@ -1,7 +1,7 @@
-import { Application, HttpError, Status } from './deps.ts';
-import router from './router.ts';
-import { loadConfig } from './config.ts';
-import store from './store.ts';
+import { Application, HttpError, Status } from "./deps.ts";
+import router from "./router.ts";
+import { loadConfig } from "./config.ts";
+import store from "./store.ts";
 
 store.init(await loadConfig());
 
@@ -47,7 +47,7 @@ app.use(async (context, next) => {
 app.use(async (ctx, next) => {
   await next();
   console.log(`${ctx.request.method} ${ctx.request.url}`);
-  ctx.response.headers.set('Access-Control-Allow-Origin', '*');
+  ctx.response.headers.set("Access-Control-Allow-Origin", "*");
 });
 
 app.use(router.routes());

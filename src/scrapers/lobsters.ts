@@ -1,4 +1,4 @@
-import { Feed, Scrape, Post } from '../model.ts';
+import { Feed, Post, Scrape } from "../model.ts";
 
 interface LobsterPost {
   short_id: string;
@@ -50,7 +50,6 @@ function lobsterToPost(item: LobsterPost): Post {
     text: item.description,
     points: item.score,
     numComments: item.comment_count,
-
     // raw: item,
   };
 
@@ -64,12 +63,11 @@ function lobsterToPost(item: LobsterPost): Post {
 function commentToPost(item: LobsterComment): Post {
   const post: Post = {
     id: item.short_id,
-    title: '',
+    title: "",
     createdAt: item.created_at,
     url: item.short_id_url,
     text: item.comment,
     points: item.score,
-
     // raw: item,
   };
 
@@ -82,11 +80,11 @@ function commentToPost(item: LobsterComment): Post {
 
 export default {
   getId(): string {
-    return 'lobsters';
+    return "lobsters";
   },
 
   async scrapeFeed(feed: Feed): Promise<Scrape> {
-    const res = await fetch('https://lobste.rs/hottest.json');
+    const res = await fetch("https://lobste.rs/hottest.json");
     const result = await res.json() as LobsterPost[];
 
     const posts = result.map(lobsterToPost);
@@ -106,4 +104,4 @@ export default {
 
     return lobsterToPost(result);
   },
-}
+};

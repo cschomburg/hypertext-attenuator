@@ -1,10 +1,10 @@
-import type { Scraper } from '../model.ts';
+import type { Scraper } from "../model.ts";
 
-import coingecko from './coingecko.ts';
-import hackernews from './hackernews.ts';
-import lobsters from './lobsters.ts';
-import reddit from './reddit.ts';
-import rss from './rss.ts';
+import coingecko from "./coingecko.ts";
+import hackernews from "./hackernews.ts";
+import lobsters from "./lobsters.ts";
+import reddit from "./reddit.ts";
+import rss from "./rss.ts";
 
 export class ScraperCollection {
   #scrapers: Record<string, Scraper> = {};

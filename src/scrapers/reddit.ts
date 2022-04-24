@@ -1,4 +1,4 @@
-import { Feed, Scrape, Post } from '../model.ts';
+import { Feed, Post, Scrape } from "../model.ts";
 
 interface Item {
   kind: string;
@@ -20,7 +20,7 @@ interface Link extends Item {
 }
 
 function isLink(item: Item): item is Link {
-  return item.kind === 't3'
+  return item.kind === "t3";
 }
 
 interface Comment extends Item {
@@ -29,7 +29,7 @@ interface Comment extends Item {
 }
 
 function isComment(item: Item): item is Comment {
-  return item.kind === 't1'
+  return item.kind === "t1";
 }
 
 interface PostData {
@@ -46,7 +46,7 @@ interface PostData {
   replies?: Listing;
 }
 
-function linkToPost(link: Link|Comment): Post {
+function linkToPost(link: Link | Comment): Post {
   const post: Post = {
     id: link.data.id,
     title: link.data.title,
@@ -55,30 +55,31 @@ function linkToPost(link: Link|Comment): Post {
     text: link.data.selftext_html || link.data.body_html,
     points: link.data.score,
     numComments: link.data.num_comments,
-
     // raw: link,
   };
 
   if (link.data.replies) {
-    post.children = link.data.replies.data.children.filter(isComment).map(linkToPost);
+    post.children = link.data.replies.data.children.filter(isComment).map(
+      linkToPost,
+    );
   }
 
   return post;
 }
 
 function linkUrl(feed: Feed, id: string): string {
-  const matches = feed.url.match(/\/r\/(\w+)/)
+  const matches = feed.url.match(/\/r\/(\w+)/);
   if (!matches) {
-    throw new Error('Could not parse subreddit from url: ' + feed.url);
+    throw new Error("Could not parse subreddit from url: " + feed.url);
   }
   const subreddit = matches[1];
 
-  return `https://www.reddit.com/r/${subreddit}/${id}.json?raw_json=1`
+  return `https://www.reddit.com/r/${subreddit}/${id}.json?raw_json=1`;
 }
 
 export default {
   getId(): string {
-    return 'reddit';
+    return "reddit";
   },
 
   async scrapeFeed(feed: Feed): Promise<Scrape> {
@@ -105,4 +106,4 @@ export default {
 
     return post;
   },
-}
+};

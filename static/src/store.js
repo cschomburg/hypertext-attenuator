@@ -1,9 +1,9 @@
-import { createStore } from './deps.js';
+import { createStore } from "./deps.js";
 
 export const { useStore, getStore, withStore } = createStore({
-    feeds: [],
+  feeds: [],
 
-    config: {
-        relayUrl: window.location.origin,
-    },
+  config: {
+    relayUrl: window.location.origin,
+  },
 });

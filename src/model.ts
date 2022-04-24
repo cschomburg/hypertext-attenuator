@@ -30,7 +30,7 @@ export interface Post {
 
   points?: number;
   numComments?: number;
-  children?: Post[],
+  children?: Post[];
 
   raw?: any;
 }

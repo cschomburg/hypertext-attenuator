@@ -1,14 +1,14 @@
-import { Feed, Scrape, Post } from '../model.ts';
-import { deserializeFeed, JsonFeedItem } from '../deps.ts';
+import { Feed, Post, Scrape } from "../model.ts";
+import { deserializeFeed, JsonFeedItem } from "../deps.ts";
 
 function itemToPost(item: JsonFeedItem): Post {
   const post: Post = {
     id: item.id,
-    title: item.title || '',
-    createdAt: (item.date_published || item.date_modified || new Date()).toISOString(),
-    url: item.url || item.external_url|| '',
-    text: item.summary || item.content_text || item.content_html || '',
-
+    title: item.title || "",
+    createdAt: (item.date_published || item.date_modified || new Date())
+      .toISOString(),
+    url: item.url || item.external_url || "",
+    text: item.summary || item.content_text || item.content_html || "",
     // raw: item,
   };
 
@@ -17,7 +17,7 @@ function itemToPost(item: JsonFeedItem): Post {
 
 export default {
   getId(): string {
-    return 'rss';
+    return "rss";
   },
 
   async scrapeFeed(feed: Feed): Promise<Scrape> {
@@ -37,6 +37,6 @@ export default {
   },
 
   async scrapePost(feed: Feed, id: string): Promise<Post> {
-    throw new Error('Not implemented yet.');
+    throw new Error("Not implemented yet.");
   },
-}
+};

@@ -1,4 +1,4 @@
-import { Feed, Scrape, Post } from '../model.ts';
+import { Feed, Post, Scrape } from "../model.ts";
 
 type AlgoliaItem = {
   id: string;
@@ -8,7 +8,7 @@ type AlgoliaItem = {
   text: string;
   points: number;
   children: AlgoliaItem[];
-}
+};
 
 type AlgoliaHit = {
   created_at: string;
@@ -18,11 +18,11 @@ type AlgoliaHit = {
   points: number;
   num_comments: number;
   objectID: string;
-}
+};
 
 type AlgoliaResult = {
   hits: AlgoliaHit[];
-}
+};
 
 function hitToPost(item: AlgoliaHit): Post {
   const post: Post = {
@@ -30,10 +30,9 @@ function hitToPost(item: AlgoliaHit): Post {
     title: item.title,
     createdAt: item.created_at,
     url: item.url,
-    text: '',
+    text: "",
     points: item.points,
     numComments: item.num_comments,
-
     // raw: item,
   };
 
@@ -45,11 +44,10 @@ function itemToPost(item: AlgoliaItem): Post {
     id: item.id.toString(),
     title: item.title,
     createdAt: item.created_at,
-    url: item.url ?? 'https://news.ycombinator.com/item?id=' + item.id,
+    url: item.url ?? "https://news.ycombinator.com/item?id=" + item.id,
     text: item.text,
     points: item.points,
     children: item.children.map(itemToPost),
-
     // raw: item,
   };
 
@@ -58,11 +56,13 @@ function itemToPost(item: AlgoliaItem): Post {
 
 export default {
   getId(): string {
-    return 'hackernews';
+    return "hackernews";
   },
 
   async scrapeFeed(feed: Feed): Promise<Scrape> {
-    const res = await fetch('http://hn.algolia.com/api/v1/search?tags=front_page');
+    const res = await fetch(
+      "http://hn.algolia.com/api/v1/search?tags=front_page",
+    );
     const result = await res.json() as AlgoliaResult;
 
     const posts = result.hits.map(hitToPost);
@@ -77,9 +77,9 @@ export default {
   },
 
   async scrapePost(feed: Feed, id: string): Promise<Post> {
-    const res = await fetch('https://hn.algolia.com/api/v1/items/' + id);
+    const res = await fetch("https://hn.algolia.com/api/v1/items/" + id);
     const result = await res.json() as AlgoliaItem;
 
     return itemToPost(result);
   },
-}
+};
